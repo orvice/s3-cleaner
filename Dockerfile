@@ -10,4 +10,8 @@ COPY . .
 RUN go build -o /go/bin/app ./cmd/main.go
 
 FROM gcr.io/distroless/base-debian10
+
+LABEL org.opencontainers.image.description email:git@orx.me
+
+
 COPY --from=builder /go/bin/app /app
