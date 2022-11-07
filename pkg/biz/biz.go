@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"sync"
 	"time"
 
 	"github.com/minio/minio-go/v7"
@@ -33,9 +34,15 @@ func Clean(cfg config.Config) {
 
 	ctx := context.Background()
 
+	wg := new(sync.WaitGroup)
+	wg.Add(len(cfg.BucketConfigs))
 	for _, bucket := range cfg.BucketConfigs {
-		cleanBucket(ctx, bucket.Name, bucket.Prefix)
+		go func(cfg config.BucketConfig) {
+			defer wg.Done()
+			cleanBucket(ctx, cfg.Name, cfg.Prefix)
+		}(bucket)
 	}
+	wg.Wait()
 }
 
 func cleanBucket(ctx context.Context, bucket string, prefix []string) {
@@ -44,9 +51,15 @@ func cleanBucket(ctx context.Context, bucket string, prefix []string) {
 		return
 	}
 
+	wg := new(sync.WaitGroup)
+	wg.Add(len(prefix))
 	for _, p := range prefix {
-		cleanBucketOjbect(ctx, bucket, p)
+		go func(prefix string) {
+			defer wg.Done()
+			cleanBucketOjbect(ctx, bucket, prefix)
+		}(p)
 	}
+	wg.Wait()
 }
 
 func cleanBucketOjbect(ctx context.Context, bucket, prefix string) {
