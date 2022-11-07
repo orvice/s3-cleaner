@@ -1,4 +1,4 @@
-module go.orx.me/s3-cleaner
+module github.com/orvice/s3-cleaner
 
 go 1.19
 
