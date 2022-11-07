@@ -7,7 +7,7 @@ import (
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-	"github.com/orvice/s3-cleaner/internal/config"
+	"github.com/orvice/s3-cleaner/pkg/config"
 	log "github.com/sirupsen/logrus"
 )
 
